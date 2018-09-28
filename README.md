@@ -12,7 +12,7 @@ Shinko has few specific features.
 4. Your goal is to make all of the element in the matrix disappear with the smallest number of noxes. 
 5. You will be able to see up to 3 future noxes. You can strategically make your moves anticipating what noxes you will have in near future.
 
-![shinko](images/game_set.png)
+![shinko](images/game_set.png=250x)
 
 ### Reinforcement learning to play the game
 
