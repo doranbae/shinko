@@ -15,7 +15,13 @@ Shinko has few specific features.
 ![shinko](images/game_set.png)
 
 ### Reinforcement learning to play the game
-Result first. I was able to achieve ... 
+| Model       | Vaniall model            | RL model   |
+|        | *Programmed to find the best action based on the current reward*            | *Trained to find the best action based on current+future rewards*   |
+| ------------- |:-------------:| -----:|
+| col 3 is      | right-aligned | $1600 |
+| col 2 is      | centered      |   $12 |
+| zebra stripes | are neat      |    $1 |
+ 
 
 
 ### Training setup
@@ -79,10 +85,10 @@ print("Saved model to disk")
 
 #### Comparision/evaluation module
 `playShinko_rl_test.py`
-It is time to do the testing. We want to see if the trained agent is doing well than the vanilla model. 
+It is time to do the testing. Since Shinko has not labeled dataset, it is not likely that I can get an accuracy. Instead, I evaluated how well it can play the game Shinko compared to the vanilla model. Vanilla model is programmed to play according to find the action with the highest reward in the currenst stage.  
 <br />
 <br />
-First thing is to load the model. 
+The first thing to do is to load the model. 
 ```python
 # load trained model by loading json and creating model
 json_file = open('model.json', 'r')
@@ -94,6 +100,8 @@ loaded_model = model_from_json(loaded_model_json)
 loaded_model.load_weights("model.h5")
 print("Loaded model from disk")
 ```
+Let's see if Shinko agent (the trained model) is doing better than the vanilla model
+
 
 
 
