@@ -15,14 +15,14 @@ Shinko has few specific features.
 ![shinko](images/game_set.png)
 
 ### Reinforcement learning to play the game
+
 | Model       | Vaniall model            | RL model   |
-|        | *Programmed to find the best action based on the current reward*            | *Trained to find the best action based on current+future rewards*   |
 | ------------- |:-------------:| -----:|
 | col 3 is      | right-aligned | $1600 |
 | col 2 is      | centered      |   $12 |
 | zebra stripes | are neat      |    $1 |
  
-
+Vaniall model is programmed to find the best action based on the current reward. RL model is trained to find the best action based on current+future rewards
 
 ### Training setup
 #### Game playing module
