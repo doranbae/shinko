@@ -13,7 +13,7 @@ matrix_min         = 1
 matrix_max         = 5
 matrix_width       = 5
 level_num          = 2
-numero_goal        = 5
+shinko_goal        = 5
 handicap           = 1
 nox_pre_watch_size = 3
 flat_matrix_length = matrix_width * level_num
@@ -64,7 +64,7 @@ class Play:
         """
         valid_pairs = []
         for valid_action in self.valid_actions:
-            remainder             = numero_goal - self.flat_matrix[0][valid_action] - nox
+            remainder             = shinko_goal - self.flat_matrix[0][valid_action] - nox
             action_remainder_pair = ( valid_action,  remainder  )
             valid_pairs.append(action_remainder_pair)
         sorted_valid_pairs        = sorted(valid_pairs, key = lambda tup: tup[1], reverse = False)

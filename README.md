@@ -37,11 +37,20 @@ python3 playShinko_vanilla.py
 ```
 
 #### Reinforcement learning module
-....py
+Reinforcement learning is divided into two components:
+* `playShinko_rl.py`  
+* `trainShinkoAgent.py`  
 
+##### playShinko_rl.py
+This file follows the same game features of the `playSHinko_vanilla.py`, but few new/altered configuration to enable the reinforcement learning. Most notably, this file pre-process the input data for the neural network built from keras.
+<br />
+<br />
+In order to to feed the current state and noxes together to the neural network, I have transformed the input data into a shape of 3 by matrix_width array. Shinko agent must be able to anticipate the future value 
+
+![shinko preprocses](images/shinko_input_preprocessing.png)
 
 #### Comparision/evaluation module
-....py
+`playShinko_rl_test.py`
 
 
 
