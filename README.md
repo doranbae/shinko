@@ -1,4 +1,4 @@
-## Playing Shinko, a mobile game, with reinforcement learning
+# Playing Shinko with reinforcement learning
 Shinko is a mobile puzzle game where you need to make added sum to 5 using blocks given to you. 
 ![shinko](images/shinko_google_store.png)
 
@@ -14,18 +14,18 @@ Shinko has few specific features.
 
 <img src="images/game_set.png" alt="shinko" width="200"/>
 
-### Reinforcement learning to play the game
+## Reinforcement learning to play the game
+After training the RL model, I compared the result with a vanilla model. 
+Vaniall model is programmed to find the best action based on the current reward. RL model is trained to find the best action based on current and future rewards.
+As a result (hold thy breath!), the vaniall model performs better in terms of number of counts for winning the game. Sadly speaking, my RL model is not good enough. However, one interesting thing the RL model can do is to choose the action anticipating the future reward. This will be discussed later (part, Vanilla vs. RL: strategic action trait)
 
-| Model       | Vaniall model            | RL model   |
-| ------------- |:-------------:| -----:|
-| col 3 is      | right-aligned | $1600 |
-| col 2 is      | centered      |   $12 |
-| zebra stripes | are neat      |    $1 |
+| Model                    | Vaniall model | RL model- trained using 1 environment setting  | RL model - trained using 20 environment settings  |
+| ------------------------ |:-------------:| ----------:| ----------:|
+| Played 300 random games  | won 28 times   | won 7 times|won Y times|
  
-Vaniall model is programmed to find the best action based on the current reward. RL model is trained to find the best action based on current+future rewards
 
-### Training setup
-#### Game playing module
+## Training setup
+### Game playing module
 `playShinko_vanilla.py` 
 <br />
 This script plays Shinko based on simple logic of addition. For the sake of simplicity, it has modified the original mobile game by removing the spliting feature. Instead of the game allowing you to add 2 with 5 to make 7 (and then resulting remainder 2 remains), you are prohibited to make any move that will result in the sum of the addition to be larger than 5. `self.valid_actions` keeps track of what moves are valid to make for each turn. Here, `action` refers to the index of the matrix. So if `action` = 7, it means the player chooses to make the addition of nox to flattened matrix index 7.
@@ -42,12 +42,12 @@ To see the sample of the vanilla play, execute the file in python
 python3 playShinko_vanilla.py
 ```
 
-#### Reinforcement learning module
+### Reinforcement learning module
 Reinforcement learning is divided into two components:
 * `playShinko_rl.py`  
 * `trainShinkoAgent.py`  
 
-##### playShinko_rl.py
+#### playShinko_rl.py
 This file follows the same game features of the `playShinko_vanilla.py`, but few new/altered configuration to enable the reinforcement learning. Most notably, this file pre-process the input data for the neural network built from keras.
 <br />
 <br />
@@ -55,7 +55,7 @@ In order to to feed the current state and noxes together to the neural network, 
 
 ![shinko preprocses](images/shinko_input_preprocessing.png)
 
-##### trainShinkoAgent.py
+#### trainShinkoAgent.py
 Using keras, I built a neural netork to train to play Shinko. 
 
 ```python
@@ -70,6 +70,10 @@ def qtable_nn_model():
     model.compile(loss = 'mse', optimizer='adam', metrics=['mae'])
     return model
 ```
+
+When training, I experimented with number of environments to train with. Here, environment refers to the matrix initialization in the beginning. I tried upto 20 different environment as more than 20 took tool long to train on my MacBook Pro. If I set up more powerful environment in the cloud, I expect I can can be more aggressive with training. 
+<br />
+<br />
 After training is over, you need to save the model. I am using Kera's built in method, which I learned from [here.](https://machinelearningmastery.com/save-load-keras-deep-learning-models/)
 
 ```python
@@ -83,9 +87,9 @@ trained_model.save_weights("model.h5")
 print("Saved model to disk")
 ```
 
-#### Comparision/evaluation module
+### Comparision/evaluation module
 `playShinko_rl_test.py`
-It is time to do the testing. Since Shinko has not labeled dataset, it is not likely that I can get an accuracy. Instead, I evaluated how well it can play the game Shinko compared to the vanilla model. Vanilla model is programmed to play according to find the action with the highest reward in the currenst stage.  
+It is time to do the testing. Since Shinko has not labeled dataset, it is not likely that I can get an accuracy. Instead, I evaluated how well it can play the game Shinko compared to the vanilla model. Vaniall model is programmed to find the best action based on the current reward. RL model is trained to find the best action based on current and future rewards.  
 <br />
 <br />
 The first thing to do is to load the model. 
@@ -100,9 +104,28 @@ loaded_model = model_from_json(loaded_model_json)
 loaded_model.load_weights("model.h5")
 print("Loaded model from disk")
 ```
-Let's see if Shinko agent (the trained model) is doing better than the vanilla model
+I want to evaluate the model from the two aspects: (1) whether it wins more games; and (2) whether it can anticipate future reward to play strategically at the current state. 
 
+#### Vanilla vs. RL: win counts 
+| Model                    | Vaniall model | RL model- trained using 1 environment setting  | RL model - trained using 20 environment settings  |
+| ------------------------ |:-------------:| ----------:| ----------:|
+| Played 300 random games  | won 28 times   | won 7 times|won 7 times|
+ 
+I played 300 random games, meaning, 300 Shinko with 300 different environment. The reason why I gave RL model different environment is to avoid overfitting. I want it to be able to play new random games as well. 
 
+#### Vanilla vs. RL: strategic action trait
+Only after the first few 1000 training, the RL model was able to strategically choose an action based on future rewards. For example, this is what happened during testing.
+![picture](images/Picture1.png)
+I made it play one of the random games, and on its 3rd move, it was given noxes of 3, 1, 2 (in that order) with a matrix of [[3,2,2,1,2],[1,3,2,1,5]]. 
+Shinko agent had to choose an action with nox 3 to the matrix, and it chose action 8. Strictly speaking from current reward perspective only, it does not make sense much in the beginning, becuase 3+1 is not 5, but 4. However, when you remember what is coming after 3, is 1. This 1 (next nox) can help making 4 into a 5. And that is precisely what the model choose as an action
+<br />
+<br />
+If it was a vanilla model, it would have probably chosen index 4 or 7 to yield an immediate reward by making a 5. Sadly, I guess this strategic action alone is not enough to beat the game. 
+
+### After thoughts
+Few ideas on how to improve the model performance
+* Add more layers to the network
+* Better reward strategy
 
 
 
