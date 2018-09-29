@@ -115,7 +115,7 @@ I played 300 random games, meaning, 300 Shinko with 300 different environment. T
 
 #### Vanilla vs. RL: strategic action trait
 Only after the first few 1000 training, the RL model was able to strategically choose an action based on future rewards. For example, this is what happened during testing.
-![picture](images/Picture1.png)
+<img src="images/Picture1.png" alt="shinko" width="600"/>
 I made it play one of the random games, and on its 3rd move, it was given noxes of 3, 1, 2 (in that order) with a matrix of [[3,2,2,1,2],[1,3,2,1,5]]. 
 Shinko agent had to choose an action with nox 3 to the matrix, and it chose action 8. Strictly speaking from current reward perspective only, it does not make sense much in the beginning, becuase 3+1 is not 5, but 4. However, when you remember what is coming after 3, is 1. This 1 (next nox) can help making 4 into a 5. And that is precisely what the model choose as an action
 <br />
